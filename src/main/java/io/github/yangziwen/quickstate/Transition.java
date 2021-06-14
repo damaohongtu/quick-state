@@ -4,7 +4,7 @@ public interface Transition<S, E, C> {
 
     State<S, E, C> getSource();
 
-    State<E, E, E> getTarget();
+    State<S, E, C> getTarget();
 
     E getEvent();
 

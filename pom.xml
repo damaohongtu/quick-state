@@ -16,6 +16,7 @@
 		<commons.lang3.version>3.3.2</commons.lang3.version>
 		<commons.collections4.version>4.1</commons.collections4.version>
 		<guava.version>19.0</guava.version>
+		<slf4j.version>1.7.13</slf4j.version>
 		<lombok.version>1.18.2</lombok.version>
 		<junit.version>4.13.1</junit.version>
 	</properties>
@@ -35,6 +36,11 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-collections4</artifactId>
 			<version>${commons.collections4.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>

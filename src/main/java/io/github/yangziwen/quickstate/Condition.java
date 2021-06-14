@@ -8,6 +8,8 @@ public interface Condition<C> {
         return this.getClass().getSimpleName();
     }
 
-    String getDescription();
+    default String getDescription() {
+        return getName();
+    }
 
 }
