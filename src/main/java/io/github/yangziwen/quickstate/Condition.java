@@ -9,7 +9,7 @@ public interface Condition<C> {
     }
 
     default String getDescription() {
-        return getName();
+        return "";
     }
 
 }
