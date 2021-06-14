@@ -10,6 +10,7 @@ import io.github.yangziwen.quickstate.StateMachine;
 import io.github.yangziwen.quickstate.Transition;
 import io.github.yangziwen.quickstate.Visitor;
 import lombok.Getter;
+import lombok.Setter;
 
 public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
 
@@ -18,6 +19,8 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
 
     private final Map<S, State<S, E, C>> stateMap;
 
+    @Getter
+    @Setter
     private boolean ready;
 
     public StateMachineImpl(String id, Map<S, State<S, E, C>> stateMap) {

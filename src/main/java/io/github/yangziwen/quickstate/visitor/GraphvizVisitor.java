@@ -43,7 +43,7 @@ public class GraphvizVisitor implements Visitor {
             builder.append("    ")
                     .append(transition.getSource().getId()).append(" -> ").append(transition.getTarget().getId())
                     .append(" [ label = \"").append(event);
-            if (StringUtils.isNotBlank(condition.getDescription())) {
+            if (condition != null && StringUtils.isNotBlank(condition.getDescription())) {
                 builder.append("\\n")
                     .append("condition: ").append(condition.getDescription());
             }
