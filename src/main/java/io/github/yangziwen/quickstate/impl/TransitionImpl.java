@@ -2,6 +2,7 @@ package io.github.yangziwen.quickstate.impl;
 
 import io.github.yangziwen.quickstate.Action;
 import io.github.yangziwen.quickstate.Condition;
+import io.github.yangziwen.quickstate.Context;
 import io.github.yangziwen.quickstate.State;
 import io.github.yangziwen.quickstate.Transition;
 import io.github.yangziwen.quickstate.TransitionType;
@@ -38,10 +39,14 @@ public class TransitionImpl<S, E, C> implements Transition<S, E, C> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public State<S, E, C> transit(C context) {
         this.verify();
         if (!test(context)) {
             return null;
+        }
+        if (context instanceof ContextImpl) {
+            ContextImpl.class.cast(context).setTransition(this);
         }
         if (action != null) {
             action.execute(source.getId(), target.getId(), event, context);

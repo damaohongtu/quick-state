@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import io.github.yangziwen.quickstate.State;
 import io.github.yangziwen.quickstate.StateMachine;
@@ -40,9 +41,13 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public S fireEvent(S sourceId, E event, C context) {
         if (!ready) {
             throw new StateMachineException("State machine[" + id + "] is not built yet, can not work");
+        }
+        if (context instanceof ContextImpl) {
+            ContextImpl.class.cast(context).setStateMachine(this);
         }
         State<S, E, C> source = ensureState(sourceId);
         State<S, E, C> target = doTransition(source, event, context);
@@ -69,6 +74,11 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
             stateMap.put(stateId, state);
         }
         return state;
+    }
+
+    @Override
+    public String toString() {
+        return "state machine[" + getId() + "] with states [" + StringUtils.join(stateMap.keySet().toArray(), ", ") + "]";
     }
 
 }
