@@ -45,20 +45,21 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
             throw new StateMachineException("State machine[" + id + "] is not built yet, can not work");
         }
         State<S, E, C> source = ensureState(sourceId);
-        return doTransition(source, event, context).getId();
+        State<S, E, C> target = doTransition(source, event, context);
+        return target != null ? target.getId() : null;
     }
 
     private State<S, E, C> doTransition(State<S, E, C> source, E event, C context) {
         List<Transition<S, E, C>> transitions = source.getTransitions(event);
         if (CollectionUtils.isEmpty(transitions)) {
-            return source;
+            return null;
         }
         for (Transition<S, E, C> transition : transitions) {
             if (transition.test(context)) {
                 return transition.transit(context);
             }
         }
-        return source;
+        return null;
     }
 
     private State<S, E, C> ensureState(S stateId) {
