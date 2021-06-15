@@ -1,5 +1,6 @@
 package io.github.yangziwen.quickstate.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,11 +30,13 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
     }
 
     @Override
+    public List<State<S, E, C>> getAllStates() {
+        return new ArrayList<>(stateMap.values());
+    }
+
+    @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
-        for (State<S, E, C> state : stateMap.values()) {
-            visitor.visit(state);
-        }
     }
 
     @Override

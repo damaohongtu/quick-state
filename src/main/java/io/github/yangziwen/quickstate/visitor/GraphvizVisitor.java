@@ -8,13 +8,14 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import io.github.yangziwen.quickstate.Condition;
+import io.github.yangziwen.quickstate.Renderer;
 import io.github.yangziwen.quickstate.State;
 import io.github.yangziwen.quickstate.StateMachine;
 import io.github.yangziwen.quickstate.Transition;
 import io.github.yangziwen.quickstate.Visitable;
 import io.github.yangziwen.quickstate.Visitor;
 
-public class GraphvizVisitor implements Visitor {
+public class GraphvizVisitor implements Visitor, Renderer {
 
     private List<String> transitionList = new ArrayList<>();
 
@@ -33,6 +34,7 @@ public class GraphvizVisitor implements Visitor {
 
     private void visitStateMachine(StateMachine<?, ?, ?> stateMachine) {
         this.stateMachine = stateMachine;
+        stateMachine.getAllStates().forEach(this::visit);
     }
 
     private void visitState(State<?, ?, ?> state) {
@@ -54,10 +56,11 @@ public class GraphvizVisitor implements Visitor {
         transitionList.add(builder.toString());
     }
 
+    @Override
     public String render() {
         StringBuilder builder = new StringBuilder();
         builder.append("digraph ").append(stateMachine.getId()).append(" {\n")
-                .append("size = \"8,5\"\n");
+                .append("    ").append("size = \"8,5\"\n");
         for (State<?, ?, ?> state : states) {
             builder.append("    ")
                     .append(state.getId()).append("[ shape = box ];\n");

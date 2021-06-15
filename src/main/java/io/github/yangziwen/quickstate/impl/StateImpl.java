@@ -20,7 +20,6 @@ public class StateImpl<S, E, C> implements State<S, E, C> {
 
     private ListMultimap<E, Transition<S, E, C>> transitions = ArrayListMultimap.create();
 
-
     StateImpl(S id) {
         this.id = id;
     }

@@ -1,6 +1,8 @@
 package io.github.yangziwen.quickstate.impl;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import io.github.yangziwen.quickstate.Action;
 import io.github.yangziwen.quickstate.Condition;
@@ -23,11 +25,11 @@ public class TransitionBuilderImpl<S, E, C> implements
 
     private final TransitionType transitionType;
 
-    private State<S, E, C> source;
+    private Set<State<S, E, C>> sources = new HashSet<>();
 
     private State<S, E, C> target;
 
-    private Transition<S, E, C> transition;
+    private Set<Transition<S, E, C>> transitions = new HashSet<>();
 
     public TransitionBuilderImpl(Map<S, State<S, E, C>> stateMap, TransitionType transitionType) {
         this.stateMap = stateMap;
@@ -35,8 +37,11 @@ public class TransitionBuilderImpl<S, E, C> implements
     }
 
     @Override
-    public From<S, E, C> from(S stateId) {
-        this.source = ensureState(stateId);
+    @SuppressWarnings("unchecked")
+    public From<S, E, C> from(S... stateIds) {
+        for (S stateId : stateIds) {
+            this.sources.add(ensureState(stateId));
+        }
         return this;
     }
 
@@ -48,20 +53,27 @@ public class TransitionBuilderImpl<S, E, C> implements
 
     @Override
     public To<S, E, C> within(S stateId) {
-        this.source = this.target = ensureState(stateId);
+        State<S, E, C> state = ensureState(stateId);
+        this.sources.add(state);
+        this.target = state;
         return this;
     }
 
     @Override
     public On<S, E, C> on(E event) {
-        this.transition = source.addTransition(event, target, transitionType);
+        for (State<S, E, C> source : sources) {
+            Transition<S, E, C> transition = source.addTransition(event, target, transitionType);
+            this.transitions.add(transition);
+        }
         return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public When<S, E, C> when(Condition<C> condition) {
-        TransitionImpl.class.cast(transition).setCondition(condition);
+        for (Transition<S, E, C> transition : this.transitions) {
+            TransitionImpl.class.cast(transition).setCondition(condition);
+        }
         return this;
     }
 
@@ -69,14 +81,18 @@ public class TransitionBuilderImpl<S, E, C> implements
     @SuppressWarnings("unchecked")
     public When<S, E, C> when(Condition<C> condition, String description) {
         ConditionProxy<C> proxy = new ConditionProxy<>(condition, description);
-        TransitionImpl.class.cast(transition).setCondition(proxy);
+        for (Transition<S, E, C> transition : this.transitions) {
+            TransitionImpl.class.cast(transition).setCondition(proxy);
+        }
         return this;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public void doAction(Action<S, E, C> action) {
-        TransitionImpl.class.cast(transition).setAction(action);
+        for (Transition<S, E, C> transition : this.transitions) {
+            TransitionImpl.class.cast(transition).setAction(action);
+        }
     }
 
     private State<S, E, C> ensureState(S stateId) {
