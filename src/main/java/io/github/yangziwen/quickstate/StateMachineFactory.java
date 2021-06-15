@@ -20,7 +20,7 @@ public class StateMachineFactory {
     @SuppressWarnings("unchecked")
     public static <S, E, C> StateMachine<S, E, C> get(String machineId) {
         StateMachine<S, E, C> stateMachine = stateMachineMap.get(machineId);
-        if(stateMachine == null){
+        if(stateMachine == null) {
             throw new StateMachineException("There is no stateMachine instance for " + machineId + ", please build it first");
         }
         return stateMachine;

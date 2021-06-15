@@ -41,7 +41,7 @@ public class TransitionImpl<S, E, C> implements Transition<S, E, C> {
     public State<S, E, C> transit(C context) {
         this.verify();
         if (!test(context)) {
-            return source;
+            return null;
         }
         if (action != null) {
             action.execute(source.getId(), target.getId(), event, context);
