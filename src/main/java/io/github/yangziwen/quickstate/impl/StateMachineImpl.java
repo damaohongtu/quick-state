@@ -42,7 +42,7 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public S fireEvent(S sourceId, E event, C context) {
+    public S fire(S sourceId, E event, C context) {
         if (!ready) {
             throw new StateMachineException("State machine[" + id + "] is not built yet, can not work");
         }
@@ -52,6 +52,13 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
         State<S, E, C> source = ensureState(sourceId);
         State<S, E, C> target = doTransition(source, event, context);
         return target != null ? target.getId() : null;
+    }
+
+    @Override
+    public boolean canApply(S sourceId, E event) {
+        State<S, E, C> source = ensureState(sourceId);
+        List<Transition<S, E, C>> transitions = source.getTransitions(event);
+        return CollectionUtils.isNotEmpty(transitions);
     }
 
     private State<S, E, C> doTransition(State<S, E, C> source, E event, C context) {

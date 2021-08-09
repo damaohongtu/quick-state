@@ -8,6 +8,8 @@ public interface StateMachine<S, E, C> extends Visitable {
 
     List<State<S, E, C>> getAllStates();
 
-    S fireEvent(S source, E event, C context);
+    S fire(S source, E event, C context);
+
+    boolean canApply(S source, E event);
 
 }
