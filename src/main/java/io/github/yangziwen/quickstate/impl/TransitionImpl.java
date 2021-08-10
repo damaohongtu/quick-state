@@ -2,7 +2,6 @@ package io.github.yangziwen.quickstate.impl;
 
 import io.github.yangziwen.quickstate.Action;
 import io.github.yangziwen.quickstate.Condition;
-import io.github.yangziwen.quickstate.Context;
 import io.github.yangziwen.quickstate.State;
 import io.github.yangziwen.quickstate.Transition;
 import io.github.yangziwen.quickstate.TransitionType;

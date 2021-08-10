@@ -36,6 +36,12 @@ public class StateMachineImpl<S, E, C> implements StateMachine<S, E, C> {
     }
 
     @Override
+    public List<Transition<S, E, C>> getTransitions(S sourceId) {
+        State<S, E, C> source = ensureState(sourceId);
+        return source.getAllTransitions();
+    }
+
+    @Override
     public void accept(Visitor visitor) {
         visitor.visit(this);
     }
