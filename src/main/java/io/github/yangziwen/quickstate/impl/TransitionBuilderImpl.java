@@ -27,6 +27,8 @@ public class TransitionBuilderImpl<S, E, C> implements
 
     private Set<State<S, E, C>> sources = new HashSet<>();
 
+    private StateGroup<S> sourceGroup = null;
+
     private State<S, E, C> target;
 
     private Set<Transition<S, E, C>> transitions = new HashSet<>();
@@ -42,6 +44,15 @@ public class TransitionBuilderImpl<S, E, C> implements
         for (S stateId : stateIds) {
             this.sources.add(ensureState(stateId));
         }
+        return this;
+    }
+
+    @Override
+    public From<S, E, C> from(StateGroup<S> stateGroup) {
+        for (S stateId : stateGroup.getStateIds()) {
+            this.sources.add(ensureState(stateId, stateGroup));
+        }
+        this.sourceGroup = stateGroup;
         return this;
     }
 
@@ -64,6 +75,9 @@ public class TransitionBuilderImpl<S, E, C> implements
         for (State<S, E, C> source : sources) {
             Transition<S, E, C> transition = source.addTransition(event, target, transitionType);
             this.transitions.add(transition);
+            if (this.sourceGroup != null) {
+                this.sourceGroup.addTransition(transition);
+            }
         }
         return this;
     }
@@ -96,12 +110,16 @@ public class TransitionBuilderImpl<S, E, C> implements
     }
 
     private State<S, E, C> ensureState(S stateId) {
+        return ensureState(stateId, null);
+    }
+
+    private State<S, E, C> ensureState(S stateId, StateGroup<S> group) {
         State<S, E, C> state = stateMap.get(stateId);
         if(state == null) {
             state = new StateImpl<>(stateId);
             stateMap.put(stateId, state);
         }
-        return state;
+        return state.addStateGroup(group);
     }
 
 }

@@ -11,12 +11,15 @@ import io.github.yangziwen.quickstate.Transition;
 import io.github.yangziwen.quickstate.TransitionType;
 import io.github.yangziwen.quickstate.Visitor;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class StateImpl<S, E, C> implements State<S, E, C> {
 
     @EqualsAndHashCode.Include
     private final S id;
+
+    private List<StateGroup<S>> groups = new ArrayList<>();
 
     private ListMultimap<E, Transition<S, E, C>> transitions = ArrayListMultimap.create();
 
@@ -44,6 +47,18 @@ public class StateImpl<S, E, C> implements State<S, E, C> {
         verify(event, transition);
         transitions.put(event, transition);
         return transition;
+    }
+
+    public StateImpl<S, E, C> addStateGroup(StateGroup<S> group) {
+        if (group != null) {
+            this.groups.add(group);
+        }
+        return this;
+    }
+
+    @Override
+    public List<StateGroup<S>> getStateGroups() {
+        return this.groups;
     }
 
     @Override
