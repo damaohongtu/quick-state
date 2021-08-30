@@ -49,6 +49,7 @@ public class StateImpl<S, E, C> implements State<S, E, C> {
         return transition;
     }
 
+    @Override
     public StateImpl<S, E, C> addStateGroup(StateGroup<S> group) {
         if (group != null) {
             this.groups.add(group);
