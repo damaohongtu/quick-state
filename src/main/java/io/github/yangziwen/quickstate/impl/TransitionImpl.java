@@ -1,5 +1,8 @@
 package io.github.yangziwen.quickstate.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.github.yangziwen.quickstate.Action;
 import io.github.yangziwen.quickstate.Condition;
 import io.github.yangziwen.quickstate.State;
@@ -32,6 +35,9 @@ public class TransitionImpl<S, E, C> implements Transition<S, E, C> {
     @Builder.Default
     private TransitionType type = TransitionType.EXTERNAL;
 
+    @Builder.Default
+    private Map<String, Object> config = new HashMap<>();
+
     @Override
     public boolean test(C context) {
         return condition == null || condition.test(context);
@@ -59,6 +65,11 @@ public class TransitionImpl<S, E, C> implements Transition<S, E, C> {
             throw new StateMachineException(String.format("Internal transition source state '%s' " +
                     "and target state '%s' must be same.", source, target));
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <V> V getConfigValue(String key) {
+        return (V) config.get(key);
     }
 
     @Override

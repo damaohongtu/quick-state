@@ -12,6 +12,8 @@ public interface Transition<S, E, C> {
 
     Action<S, E, C> getAction();
 
+    <V> V getConfigValue(String key);
+
     boolean test(C context);
 
     State<S, E, C> transit(C context);

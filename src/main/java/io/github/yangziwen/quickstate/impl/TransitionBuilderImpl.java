@@ -1,5 +1,6 @@
 package io.github.yangziwen.quickstate.impl;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -72,8 +73,13 @@ public class TransitionBuilderImpl<S, E, C> implements
 
     @Override
     public On<S, E, C> on(E event) {
+        return on(event, Collections.emptyMap());
+    }
+
+    @Override
+    public On<S, E, C> on(E event, Map<String, Object> config) {
         for (State<S, E, C> source : sources) {
-            Transition<S, E, C> transition = source.addTransition(event, target, transitionType);
+            Transition<S, E, C> transition = source.addTransition(event, target, transitionType, config);
             this.transitions.add(transition);
             if (this.sourceGroup != null) {
                 this.sourceGroup.addTransition(transition);

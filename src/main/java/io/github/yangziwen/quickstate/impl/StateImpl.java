@@ -2,6 +2,7 @@ package io.github.yangziwen.quickstate.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -38,13 +39,17 @@ public class StateImpl<S, E, C> implements State<S, E, C> {
     }
 
     @Override
-    public Transition<S, E, C> addTransition(E event, State<S, E, C> target, TransitionType type) {
+    public Transition<S, E, C> addTransition(
+            E event, State<S, E, C> target, TransitionType type, Map<String, Object> config) {
         TransitionImpl<S, E, C> transition = TransitionImpl.<S, E, C>builder()
                 .source(this)
                 .target(target)
                 .event(event)
                 .build();
         verify(event, transition);
+        if (config != null) {
+            transition.getConfig().putAll(config);
+        }
         transitions.put(event, transition);
         return transition;
     }
