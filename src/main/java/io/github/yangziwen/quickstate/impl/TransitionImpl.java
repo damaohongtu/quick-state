@@ -67,6 +67,7 @@ public class TransitionImpl<S, E, C> implements Transition<S, E, C> {
         }
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <V> V getConfigValue(String key) {
         return (V) config.get(key);
